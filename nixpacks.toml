@@ -5,4 +5,4 @@ cmds = ["echo 'PHP environment configured'"]
 cmds = ["echo 'Build completed'"]
 
 [start]
-cmd = "php -S 0.0.0.0:$PORT -t medicale" 
+cmd = "php -S 0.0.0.0:$PORT -t medicale/medicale" 
