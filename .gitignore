@@ -1,0 +1,64 @@
+# Configuration files
+config.php
+.env
+*.env
+
+# Database files
+*.sql
+*.db
+
+# Uploads and user content
+uploads/
+medicale/uploads/
+
+# Logs
+*.log
+logs/
+
+# Cache and temporary files
+cache/
+tmp/
+temp/
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Composer
+vendor/
+composer.lock
+
+# Node modules (if any)
+node_modules/
+npm-debug.log*
+
+# Build files
+dist/
+build/
+
+# Backup files
+*.bak
+*.backup
+
+# Executable files
+*.exe
+*.dll
+*.so
+*.dylib
+
+# Large media files (optional - uncomment if needed)
+# *.mp4
+# *.avi
+# *.mov 

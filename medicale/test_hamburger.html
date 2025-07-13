@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Menu Hamburger</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Styles pour le test */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            width: 280px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            transform: translateX(-100%);
+            transition: transform 0.3s ease-in-out;
+            z-index: 50;
+        }
+        
+        .sidebar.open {
+            transform: translateX(0);
+        }
+        
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 40;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        @media (min-width: 768px) {
+            .sidebar {
+                transform: translateX(0);
+                position: relative;
+            }
+            
+            .hamburger-btn {
+                display: none;
+            }
+            
+            .overlay {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <div class="flex h-screen overflow-hidden">
+        <!-- Sidebar -->
+        <div id="sidebar" class="sidebar">
+            <div class="flex flex-col h-full">
+                <div class="flex items-center justify-center h-20 px-4 bg-indigo-900">
+                    <div class="flex items-center gap-2">
+                        <i class="fas fa-heartbeat text-3xl text-pink-400"></i>
+                        <span class="text-2xl font-bold text-white">Test Menu</span>
+                    </div>
+                </div>
+                <nav class="flex-1 px-4 py-4">
+                    <div class="space-y-2">
+                        <a href="#" class="flex items-center px-4 py-3 text-white hover:bg-indigo-600 rounded-lg">
+                            <i class="fas fa-home mr-3"></i>
+                            Accueil
+                        </a>
+                        <a href="#" class="flex items-center px-4 py-3 text-white hover:bg-indigo-600 rounded-lg">
+                            <i class="fas fa-users mr-3"></i>
+                            Patients
+                        </a>
+                        <a href="#" class="flex items-center px-4 py-3 text-white hover:bg-indigo-600 rounded-lg">
+                            <i class="fas fa-user-md mr-3"></i>
+                            Médecins
+                        </a>
+                        <a href="#" class="flex items-center px-4 py-3 text-white hover:bg-indigo-600 rounded-lg">
+                            <i class="fas fa-calendar mr-3"></i>
+                            Rendez-vous
+                        </a>
+                    </div>
+                </nav>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="flex flex-col flex-1">
+            <!-- Header -->
+            <header class="flex items-center justify-between h-16 px-6 bg-white border-b border-gray-200">
+                <div class="flex items-center">
+                    <button id="hamburger-btn" class="hamburger-btn text-gray-500 hover:text-indigo-600 focus:outline-none p-2 rounded-lg hover:bg-gray-100">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                    <h1 class="ml-4 text-xl font-semibold text-gray-900">Test Menu Hamburger</h1>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <span class="text-sm text-gray-600">Test de fonctionnalité</span>
+                </div>
+            </header>
+
+            <!-- Content -->
+            <main class="flex-1 p-6">
+                <div class="max-w-4xl mx-auto">
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <h2 class="text-2xl font-bold mb-4">Test du Menu Hamburger</h2>
+                        <p class="text-gray-600 mb-4">
+                            Ceci est un test pour vérifier que le menu hamburger fonctionne correctement sur mobile.
+                        </p>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                            <div class="bg-blue-50 p-4 rounded-lg">
+                                <h3 class="font-semibold text-blue-900 mb-2">Instructions</h3>
+                                <ul class="text-sm text-blue-800 space-y-1">
+                                    <li>• Redimensionnez votre navigateur pour simuler mobile</li>
+                                    <li>• Cliquez sur le bouton hamburger (☰)</li>
+                                    <li>• Le menu devrait s'ouvrir avec une animation</li>
+                                    <li>• Cliquez sur l'overlay pour fermer</li>
+                                </ul>
+                            </div>
+                            <div class="bg-green-50 p-4 rounded-lg">
+                                <h3 class="font-semibold text-green-900 mb-2">Statut</h3>
+                                <div id="status" class="text-sm text-green-800">
+                                    En attente de test...
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-gray-50 p-4 rounded-lg">
+                            <h3 class="font-semibold mb-2">Console de débogage</h3>
+                            <div id="debug" class="text-sm text-gray-600 font-mono bg-white p-2 rounded border">
+                                Console vide...
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Overlay -->
+    <div id="overlay" class="overlay"></div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const hamburgerBtn = document.getElementById('hamburger-btn');
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('overlay');
+            const status = document.getElementById('status');
+            const debug = document.getElementById('debug');
+
+            function log(message) {
+                const timestamp = new Date().toLocaleTimeString();
+                debug.innerHTML += `<div>[${timestamp}] ${message}</div>`;
+                console.log(message);
+            }
+
+            function updateStatus(message) {
+                status.innerHTML = message;
+            }
+
+            log('Initialisation du test menu hamburger');
+            updateStatus('Prêt pour le test');
+
+            // Test du bouton hamburger
+            if (hamburgerBtn) {
+                hamburgerBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    log('Clic sur le bouton hamburger');
+                    
+                    const isOpen = sidebar.classList.contains('open');
+                    log(`Menu actuellement ${isOpen ? 'ouvert' : 'fermé'}`);
+                    
+                    if (isOpen) {
+                        // Fermer le menu
+                        sidebar.classList.remove('open');
+                        overlay.classList.remove('active');
+                        document.body.classList.remove('overflow-hidden');
+                        log('Menu fermé');
+                        updateStatus('Menu fermé');
+                    } else {
+                        // Ouvrir le menu
+                        sidebar.classList.add('open');
+                        overlay.classList.add('active');
+                        document.body.classList.add('overflow-hidden');
+                        log('Menu ouvert');
+                        updateStatus('Menu ouvert');
+                    }
+                });
+            } else {
+                log('ERREUR: Bouton hamburger non trouvé');
+                updateStatus('ERREUR: Bouton hamburger manquant');
+            }
+
+            // Test de l'overlay
+            if (overlay) {
+                overlay.addEventListener('click', function() {
+                    log('Clic sur l\'overlay');
+                    sidebar.classList.remove('open');
+                    overlay.classList.remove('active');
+                    document.body.classList.remove('overflow-hidden');
+                    updateStatus('Menu fermé via overlay');
+                });
+            }
+
+            // Test des liens du menu
+            const menuLinks = sidebar.querySelectorAll('a');
+            menuLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    log(`Clic sur le lien: ${this.textContent.trim()}`);
+                    
+                    if (window.innerWidth < 768) {
+                        sidebar.classList.remove('open');
+                        overlay.classList.remove('active');
+                        document.body.classList.remove('overflow-hidden');
+                        log('Menu fermé via lien (mobile)');
+                        updateStatus('Menu fermé via lien');
+                    }
+                });
+            });
+
+            // Test du redimensionnement
+            window.addEventListener('resize', function() {
+                log(`Redimensionnement: ${window.innerWidth}px`);
+                if (window.innerWidth >= 768) {
+                    sidebar.classList.remove('open');
+                    overlay.classList.remove('active');
+                    document.body.classList.remove('overflow-hidden');
+                    log('Menu fermé (desktop)');
+                    updateStatus('Mode desktop détecté');
+                } else {
+                    log('Mode mobile détecté');
+                    updateStatus('Mode mobile détecté');
+                }
+            });
+
+            // Test initial
+            log(`Largeur initiale: ${window.innerWidth}px`);
+            if (window.innerWidth < 768) {
+                updateStatus('Mode mobile détecté');
+            } else {
+                updateStatus('Mode desktop détecté');
+            }
+        });
+    </script>
+</body>
+</html> 

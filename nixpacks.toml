@@ -1,0 +1,11 @@
+[phases.setup]
+nixPkgs = ["php", "php74Extensions.mysqli", "php74Extensions.gd", "php74Extensions.mbstring"]
+
+[phases.install]
+cmds = ["echo 'PHP environment configured'"]
+
+[phases.build]
+cmds = ["echo 'Build completed'"]
+
+[start]
+cmd = "php -S 0.0.0.0:$PORT -t ." 

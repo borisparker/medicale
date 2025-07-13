@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Dossiers Médicaux</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-gray-50">
+    <div class="container mx-auto px-4 py-8">
+        <h1 class="text-3xl font-bold text-gray-800 mb-8">Test des Dossiers Médicaux</h1>
+        
+        <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+            <!-- Liste des patients -->
+            <div class="lg:col-span-1 bg-white rounded-lg shadow overflow-hidden">
+                <div class="p-4 border-b border-gray-200">
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 flex items-center pl-3">
+                            <i class="fas fa-search text-gray-400"></i>
+                        </div>
+                        <input type="text" id="search-patient" class="w-full py-2 pl-10 pr-4 text-sm bg-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500" placeholder="Rechercher un patient...">
+                    </div>
+                </div>
+                <div class="overflow-y-auto" style="max-height: 600px;">
+                    <div class="divide-y divide-gray-200" id="patients-list">
+                        <div class="p-4 text-center text-gray-400">Chargement...</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Détails du dossier sélectionné -->
+            <div class="lg:col-span-3">
+                <div class="bg-white rounded-lg shadow overflow-hidden">
+                    <!-- En-tête du dossier -->
+                    <div class="p-6 border-b border-gray-200 flex justify-between items-center bg-indigo-50" id="dossier-header">
+                        <div class="text-center w-full">
+                            <p class="text-gray-500">Sélectionnez un patient pour voir son dossier médical</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Onglets -->
+                    <div class="border-b border-gray-200">
+                        <nav class="flex -mb-px" id="dossier-tabs">
+                            <a href="#" class="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-4 px-6 border-b-2 font-medium text-sm">Sélectionnez un patient</a>
+                        </nav>
+                    </div>
+                    
+                    <!-- Contenu du dossier -->
+                    <div class="p-6" id="dossier-content">
+                        <div class="text-center text-gray-500">
+                            <i class="fas fa-user-injured text-4xl mb-4"></i>
+                            <p>Sélectionnez un patient dans la liste pour consulter son dossier médical</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="dossiers_medicaux.js"></script>
+    <script>
+        // Charger les dossiers médicaux au chargement de la page
+        document.addEventListener('DOMContentLoaded', function() {
+            loadDossiersMedicaux();
+            
+            // Gestion de la recherche
+            document.getElementById('search-patient').addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase();
+                const patientItems = document.querySelectorAll('.patient-item');
+                
+                patientItems.forEach(item => {
+                    const patientName = item.querySelector('.patient-name').textContent.toLowerCase();
+                    if (patientName.includes(searchTerm)) {
+                        item.style.display = 'block';
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
+            });
+            
+            // Gestion du formulaire de nouvelle consultation
+            document.addEventListener('submit', function(e) {
+                if (e.target.id === 'form-nouvelle-consultation') {
+                    e.preventDefault();
+                    const formData = new FormData(e.target);
+                    
+                    fetch('ajouter_consultation_admin.php', {
+                        method: 'POST',
+                        body: formData
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            alert('Consultation ajoutée avec succès !');
+                            e.target.reset();
+                            // Recharger le dossier
+                            const currentDossierId = document.querySelector('.patient-item.border-l-4').getAttribute('data-medical-record-id');
+                            selectDossier(currentDossierId);
+                        } else {
+                            alert('Erreur : ' + data.message);
+                        }
+                    })
+                    .catch(() => {
+                        alert('Erreur lors de la communication avec le serveur.');
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html> 

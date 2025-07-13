@@ -1,0 +1,20 @@
+# Fichiers de dépendances (gérés par Composer)
+/vendor/
+
+# Fichiers de dépendances (gérés par npm/yarn)
+/node_modules/
+
+# Fichiers de log
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Fichiers système
+.DS_Store
+Thumbs.db
+
+# Fichiers de configuration locaux (si vous en avez)
+.env
+.env.local
+.env.*.local 
