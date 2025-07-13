@@ -1,5 +1,5 @@
 [phases.setup]
-nixPkgs = ["php", "php74Extensions.mysqli", "php74Extensions.gd", "php74Extensions.mbstring"]
+nixPkgs = ["php", "php81Extensions.mysqli", "php81Extensions.gd", "php81Extensions.mbstring"]
 
 [phases.install]
 cmds = ["echo 'PHP environment configured'"]
